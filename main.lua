@@ -7,13 +7,6 @@ require 'src/Dependencies'
 -- keep track of our people, note g to indicate global
 gPeople = {}
 
-POPULATION = 450
--- Transmission is calculated on a 1-100 diceroll.
--- This translates to 3% probability of transmission
-TRANSMISSION_PROBABILITY = 6
-INFECTED = 3
-WORLD_SIZE = 250
-
 function love.load()
 
     -- seed the RNG
@@ -29,6 +22,8 @@ function love.load()
         gPeople[i].gesundheit = 'infected'
     end
 
+    display = Display()
+    display:init()
 end
 
 function love.update(dt)
@@ -36,15 +31,20 @@ function love.update(dt)
         person:update(dt)
     end
 
+    display:update()
+
 end
 
 function love.draw()
 
-    love.graphics.push()
     local w, h, flags = love.window.getMode()
     local scale = math.min(w, h)
+    ----[[
+    love.graphics.push()
+
     -- work in units of 100
-    love.graphics.scale(scale / WORLD_SIZE)
+    love.graphics.translate(0, h*.01)
+    love.graphics.scale(scale / WORLD_SIZE * .95)
     love.graphics.setColor(.2,.2,.2,1)
     love.graphics.rectangle('fill', 1, 1, WORLD_SIZE - 2, WORLD_SIZE - 2)
 
@@ -53,6 +53,9 @@ function love.draw()
     end
 
     love.graphics.pop()
+    --]]
+
+    display:draw()
     drawFPS()
 end
 

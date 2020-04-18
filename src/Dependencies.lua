@@ -4,6 +4,9 @@
 Class = require 'lib/class'
 vector  = require 'lib/vector'
 
+require 'src/CONSTANTS'
+
 require 'src/Person'
+require 'src/Display'
 
 require 'src/util'
