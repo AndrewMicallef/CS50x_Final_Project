@@ -7,14 +7,14 @@ require 'src/Dependencies'
 -- keep track of our people
 gPeople = {}
 
-POPULATION = 100
+POPULATION = 10
 
 function love.load()
 
     math.randomseed(os.time())
     -- initialise some people
     for i = 1, POPULATION do
-        gPeople[i] = Person()
+        gPeople[i] = Person(i)
     end
     gPeople[1].gesundheit = 'infected'
 

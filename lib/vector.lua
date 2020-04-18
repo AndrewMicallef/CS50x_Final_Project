@@ -46,12 +46,12 @@ local function randomDirection(len_min, len_max)
 
 	assert(len_max > 0, "len_max must be greater than zero")
 	assert(len_max >= len_min, "len_max must be greater than or equal to len_min")
-	
+
 	return fromPolar(math.random() * 2*math.pi,
 	                 math.random() * (len_max-len_min) + len_min)
 end
 
-local function isvector(v)
+function isvector(v)
 	return type(v) == 'table' and type(v.x) == 'number' and type(v.y) == 'number'
 end
 
