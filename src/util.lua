@@ -1,7 +1,7 @@
 
 -- AABB style collision between two objects.
 -- Expects both objects to have a bbox attribute which conatians the x, y, w, h
--- of the object
+-- of the object. Based of of Colton Ogden's AABB collision in fiftybird.
 -- returns true on collision or false if no collision
 function collision(object0, object1)
 
