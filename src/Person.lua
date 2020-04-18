@@ -57,6 +57,21 @@ function Person:update(dt)
     self.behaviours[self.state](dt)
     self.health[self.gesundheit](dt)
 
+    if (self.pos.x + self.radius > WORLD_SIZE - 1) then
+        self.pos.x = WORLD_SIZE - self.radius
+    end
+    if (self.pos.x - self.radius < 1) then
+        self.pos.x = 1 + self.radius
+    end
+    if (self.pos.y + self.radius > WORLD_SIZE - 1) then
+        self.pos.y = WORLD_SIZE - self.radius
+    end
+    if (self.pos.y - self.radius < 1) then
+        self.pos.y = 1 + self.radius
+    end
+
+
+
 end
 
 function Person:draw()
