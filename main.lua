@@ -15,12 +15,15 @@ function love.load()
     player = Player()
     player:init(5, 5)
 
+    love.keyboard.wasPressed = {}
+    love.keyboard.wasReleased = {}
 end
 
 function love.update(dt)
     player:update(dt)
 
-    love.keyboard
+    love.keyboard.wasPressed = {}
+    love.keyboard.wasReleased = {}
 end
 
 function love.draw()
@@ -58,4 +61,16 @@ function drawFPS()
     local w, h, flags = love.window.getMode()
     love.graphics.setColor(1,1,0,1)
     love.graphics.print(love.timer.getFPS() .. ' fps', w - 60, 10)
+end
+
+
+--------------------------------------------------------------------------------
+-- KEYBOARD
+
+function love.keypressed(key)
+    love.keyboard.wasPressed[key] = true
+end
+
+function love.keyreleased(key)
+    love.keyboard.wasReleased[key] = true
 end

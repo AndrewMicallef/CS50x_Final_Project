@@ -5,15 +5,15 @@ local recovery_timer = 0
 
 local WALK_SPEED = 20
 
-function Person:init(index)
-    self.index = index
+function Person:init(id, x, y)
+    self.index = id
     self.radius = 2
     self.debug= 0
 
     local buffer = self.radius * 2
-    self.pos = vector(math.random(buffer, WORLD_SIZE - buffer),
-                      math.random(buffer, WORLD_SIZE - buffer))
-    self.vel = vector.fromPolar(math.random()*2, WALK_SPEED)
+    self.pos = vector.new(x,y)
+    self.vel = vector.new(0,0)
+    self.facing = 0
 
     -- health realted properties
     self.day = 0
@@ -25,32 +25,28 @@ function Person:init(index)
     -- German for health, in this case tracks the health state of our person
     -- can be one of: healthy, infected, recovered, dead
     self.gesundheit = 'healthy'
+
+    -- state machine for health status
+    self.Health_switch =
+        {
+            ['healthy'] = function(dt) return self:healthy(dt) end,
+            ['infected'] = function(dt) return self:infected(dt) end,
+            ['recovered'] = function(dt) return self:recovered(dt) end,
+            ['dead'] = function(dt) return self:dead(dt) end,
+        }
+
+
     self.state = 'idle'
 
-end
+    -- state machine for behaviours
+    self.Behaviours_switch =
+        {
+            ['idle'] = function(dt) return self:idle(dt) end,
+            ['walking'] = function(dt) return self:walking(dt) end,
+            -- ... ....
+            -- etc
+        }
 
--- state machine for health status
-function Person:Health_switch(state)
-    local sm =
-    {
-        ['healthy'] = function(dt) return self:healthy(dt) end,
-        ['infected'] = function(dt) return self:infected(dt) end,
-        ['recovered'] = function(dt) return self:recovered(dt) end,
-        ['dead'] = function(dt) return self:dead(dt) end,
-    }
-    return sm[state]
-end
-
--- state machine for behaviours
-function Person:Behaviours_switch(state)
-    local sm =
-    {
-        ['idle'] = function(dt) return self:idle(dt) end,
-        ['walking'] = function(dt) return self:walking(dt) end,
-        -- ... ....
-        -- etc
-    }
-    return sm[state]
 end
 
 function Person:update(dt)
@@ -76,7 +72,7 @@ function Person:draw()
     local r = self.radius
     local theta = self.vel:toPolar().x
     theta = theta % 2
-    self.debug = theta
+
     love.graphics.push()
     -- draw relative to Persons' axis
     love.graphics.translate(self.pos.x, self.pos.y)
@@ -199,7 +195,7 @@ function Person:setFacing()
 end
 
 --------------------------------------------------------------------------------
--- Player Actions
+-- Person Actions
 --------------------------------------------------------------------------------
 
 function Person:shout()
@@ -231,4 +227,18 @@ function Person:shout()
         -- draw a line
         ::continue::
     end
+end
+
+function Person:walk(dv, dt)
+    -- change state
+    self.state = 'walking'
+
+    --[[ do the thing
+    if heading:len() > 1 then
+        heading = heading:normalized()
+    end --]]
+    self.pos = self.pos + dv * dt * WALK_SPEED
+    self.vel = dv
+    self.facing = self.vel:angleTo(vector.new(0,1))
+
 end
