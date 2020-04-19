@@ -6,7 +6,7 @@
 --
 -- returns true on collision or false if no collision
 function collision(object0, object1)
-
+    ----[[
     local x0, y0, w0, h0 = object0:getBbox()
     local x1, y1, w1, h1 = object1:getBbox()
 
@@ -15,7 +15,9 @@ function collision(object0, object1)
             return true
         end
     end
+    --]]
     return false
+
 end
 
 

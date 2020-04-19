@@ -76,14 +76,7 @@ function Person:draw()
 
     love.graphics.setColor(STATUS_COLOR[self.gesundheit])
     love.graphics.circle('fill', 0, 0, r)
-
-    if self.gesundheit == 'infected' then
-        love.graphics.setColor(1,1,1, 1)
-        love.graphics.setLineWidth(.2)
-        mv = self.vel
-        love.graphics.line(mv.x, mv.y, 0, 0)
-        --love.graphics.arc('line', 0, 0, r*3, theta-.5, theta+.5)
-    end
+    
     love.graphics.pop()
     --end
     -- bounding box for debug
@@ -103,27 +96,18 @@ function Person:walking(dt)
     -- check collision
     -- TODO SIMPLIYFY COLLISION DETECTION
     for i, person in pairs(gPeople) do
-        if i ~= self.index then -- ignore self collisions
-            if collision(self, person) then
+        if i == self.index then goto continue end -- ignore self collisions
+        if collision(self, person) then
 
-                -- nudge this person a tad if they are overlapping their neighbour
-                while vector().dist(self.pos, person.pos) < (self.radius + person.radius)*1.05 do
-                    self.pos = self.pos - self.vel * dt
-                end
-
-                -- TODO clean this up... remember each body should exert a force on the other
-                local vnet = self.vel - person.vel
-
-                self.vel = (vnet):perpendicular():trimmed(WALK_SPEED)
-                person.vel = (person.vel + vnet):trimmed(WALK_SPEED)
-
-                if person.gesundheit == 'infected' and math.random(100) < person.transmission_rate then
-                    if self.gesundheit == 'healthy' then -- only the healthy can be infected
-                         self.gesundheit = 'infected'
-                     end
-                end
+            if person.gesundheit == 'infected' and math.random(100) < person.transmission_rate then
+                if self.gesundheit == 'healthy' then -- only the healthy can be infected
+                     self.gesundheit = 'infected'
+                     -- hey man, you bumped me
+                     self:shout()
+                 end
             end
         end
+        ::continue::
     end
 
     self.pos = self.pos + self.vel * dt
@@ -143,11 +127,12 @@ end
 --------------------------------------------------------------------------------
 
 function Person:healthy(dt)
+    self.state = 'walking'
 end
 
 function Person:infected(dt)
-    self:shout()
-    --[[
+    --self:shout()
+    ----[[
     local prevday = self.day
     -- works out to be about 1 day per second or so
     infection_timer = infection_timer + dt/10
@@ -218,19 +203,25 @@ function Person:shout()
     -- from the segment.
     -- Also draw some random ASCII characters from the set *&%$#!*
     local facing = self.vel:normalized():toPolar().x
-    local shout_angle, shout_strength = 0.5, 70
+    local shout_angle, shout_strength = 1, 70
 
     -- https://stackoverflow.com/a/13675772
     for i, person in pairs(gPeople) do
         if i == self.i then goto continue end
 
-        local checkperson = isInsideSector(person.pos, self.pos,
+        ----[[
+        local checkfront = isInsideSector(person.pos, self.pos,
                                            self.vel:rotated(-shout_angle),
                                            self.vel:rotated(shout_angle),
                                            math.pow(shout_strength,2))
+       --]]
+       local checkback = self.pos:dist(person.pos) < shout_strength / 4
 
-        if checkperson then
-            person.gesundheit = 'recovered'
+        if checkback or checkfront then
+            -- add a force directed from the shouter
+            local mag = self.pos:dist(person.pos)
+            local dir = person.pos - self.pos
+            person.vel = (person.vel + (dir * mag)):trimmed(WALK_SPEED)
         end
         -- draw a line
         ::continue::

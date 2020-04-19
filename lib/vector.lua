@@ -133,6 +133,13 @@ function vector.dist(a, b)
 	return sqrt(dx * dx + dy * dy)
 end
 
+function vector:dist(b)
+	assert(isvector(b), "dist: wrong argument types (<vector> expected)")
+	local dx = self.x - b.x
+	local dy = self.y - b.y
+	return sqrt(dx * dx + dy * dy)
+end
+
 function vector.dist2(a, b)
 	assert(isvector(a) and isvector(b), "dist: wrong argument types (<vector> expected)")
 	local dx = a.x - b.x
