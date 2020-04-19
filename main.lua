@@ -18,7 +18,7 @@ function love.load()
     end
 
     -- make some sick
-    for i = 1, INFECTED do
+    for i = POPULATION - INFECTED, POPULATION do
         gPeople[i].gesundheit = 'infected'
     end
 
@@ -53,6 +53,8 @@ function love.draw()
     end
 
     love.graphics.pop()
+
+    love.graphics.print(gPeople[1].debug, 1, 1)
     --]]
 
     display:draw()

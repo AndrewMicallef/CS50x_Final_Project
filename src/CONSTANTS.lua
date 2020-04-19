@@ -1,8 +1,8 @@
-POPULATION = 450
+POPULATION = 2500
 -- Transmission is calculated on a 1-100 diceroll.
 -- This translates to 3% probability of transmission
 TRANSMISSION_PROBABILITY = 6
-INFECTED = 3
+INFECTED = 1
 WORLD_SIZE = 250
 
 STATUS_COLOR = {

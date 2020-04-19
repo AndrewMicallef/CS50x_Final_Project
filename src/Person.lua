@@ -15,17 +15,17 @@ function Person:init(index)
                       math.random(buffer, WORLD_SIZE - buffer))
     self.vel = vector.fromPolar(math.random()*2, WALK_SPEED)
 
-    self.bbox = {self.pos.x, self.pos.y, 2*self.radius, 2*self.radius}
-
     -- health realted properties
     self.day = 0
     self.transmission_rate = TRANSMISSION_PROBABILITY
+
+    self.shouting = true
 
     -- Gesundheit:
     -- German for health, in this case tracks the health state of our person
     -- can be one of: healthy, infected, recovered, dead
     self.gesundheit = 'healthy'
-    self.state = 'walking'
+    self.state = 'idle'
 
     -- state machine for health status
     self.health = {
@@ -62,18 +62,30 @@ function Person:update(dt)
     if (self.pos.y - self.radius < 1) then
         self.pos.y = 1 + self.radius
     end
-
-
-
 end
 
 function Person:draw()
     local r = self.radius
-    love.graphics.setColor(STATUS_COLOR[self.gesundheit])
-    love.graphics.circle('fill', self.pos.x, self.pos.y, r)
-    love.graphics.setColor(1,1,1,1)
-    love.graphics.setLineWidth(.2)
+    local theta = self.vel:toPolar().x
+    theta = theta % 2
+    self.debug = theta
+    love.graphics.push()
+    -- draw relative to Persons' axis
+    love.graphics.translate(self.pos.x, self.pos.y)
+    --love.graphics.rotate(theta)
 
+    love.graphics.setColor(STATUS_COLOR[self.gesundheit])
+    love.graphics.circle('fill', 0, 0, r)
+
+    if self.gesundheit == 'infected' then
+        love.graphics.setColor(1,1,1, 1)
+        love.graphics.setLineWidth(.2)
+        mv = self.vel
+        love.graphics.line(mv.x, mv.y, 0, 0)
+        --love.graphics.arc('line', 0, 0, r*3, theta-.5, theta+.5)
+    end
+    love.graphics.pop()
+    --end
     -- bounding box for debug
     -- love.graphics.rectangle('line', self.pos.x - r, self.pos.y - r, 2*r, 2*r)
 end
@@ -83,7 +95,6 @@ end
 --------------------------------------------------------------------------------
 
 function Person:idle(dt)
-
 end
 
 function Person:walking(dt)
@@ -125,8 +136,6 @@ function Person:walking(dt)
         self.pos.y = self.pos.y - self.vel.y * 1.5*dt
         self.vel.y = -self.vel.y
     end
-
-
 end
 
 --------------------------------------------------------------------------------
@@ -137,6 +146,8 @@ function Person:healthy(dt)
 end
 
 function Person:infected(dt)
+    self:shout()
+    --[[
     local prevday = self.day
     -- works out to be about 1 day per second or so
     infection_timer = infection_timer + dt/10
@@ -156,9 +167,11 @@ function Person:infected(dt)
             self.gesundheit = 'recovered'
         end
     end
+    -- ]]
 end
 
 function Person:recovered(dt)
+    --[[
     local prevday = self.day
     infection_timer = infection_timer + dt/10
     self.day = math.floor(infection_timer + dt/10)
@@ -170,7 +183,7 @@ function Person:recovered(dt)
     if self.day > 7 and math.random(100) < 2 then
         self.gesundheit = 'healthy'
     end
-
+    -- ]]
 end
 
 function Person:dead(dt)
@@ -179,7 +192,47 @@ function Person:dead(dt)
 end
 
 --------------------------------------------------------------------------------
+-- utilities
 
 function Person:getBbox()
     return self.pos.x, self.pos.y, 2*self.radius, 2*self.radius
+end
+
+-- returns the direction someone is facing
+function Person:getFacing()
+    -- TODO
+end
+
+-- sets the direction someone is facing, including velocity if they are walking
+function Person:setFacing()
+    -- TODO
+end
+
+--------------------------------------------------------------------------------
+-- Player Actions
+--------------------------------------------------------------------------------
+
+function Person:shout()
+    -- cast a circular segemt out in the direction the person is facing
+    -- creates a temporary field, any person within the field gets pushed away
+    -- from the segment.
+    -- Also draw some random ASCII characters from the set *&%$#!*
+    local facing = self.vel:normalized():toPolar().x
+    local shout_angle, shout_strength = 0.5, 70
+
+    -- https://stackoverflow.com/a/13675772
+    for i, person in pairs(gPeople) do
+        if i == self.i then goto continue end
+
+        local checkperson = isInsideSector(person.pos, self.pos,
+                                           self.vel:rotated(-shout_angle),
+                                           self.vel:rotated(shout_angle),
+                                           math.pow(shout_strength,2))
+
+        if checkperson then
+            person.gesundheit = 'recovered'
+        end
+        -- draw a line
+        ::continue::
+    end
 end
