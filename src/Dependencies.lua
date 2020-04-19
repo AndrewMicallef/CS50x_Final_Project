@@ -7,6 +7,6 @@ vector  = require 'lib/vector'
 require 'src/CONSTANTS'
 
 require 'src/Person'
-require 'src/Display'
+require 'src/Player'
 
 require 'src/util'

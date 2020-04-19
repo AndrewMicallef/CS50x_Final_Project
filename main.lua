@@ -7,32 +7,20 @@ require 'src/Dependencies'
 -- keep track of our people, note g to indicate global
 gPeople = {}
 
+
 function love.load()
 
     -- seed the RNG
     math.randomseed(os.time())
+    player = Player()
+    player:init(5, 5)
 
-    -- initialise some people
-    for i = 1, POPULATION do
-        gPeople[i] = Person(i)
-    end
-
-    -- make some sick
-    for i = POPULATION - INFECTED, POPULATION do
-        gPeople[i].gesundheit = 'infected'
-    end
-
-    display = Display()
-    display:init()
 end
 
 function love.update(dt)
-    for i, person in ipairs(gPeople) do
-        person:update(dt)
-    end
+    player:update(dt)
 
-    display:update()
-
+    love.keyboard
 end
 
 function love.draw()
@@ -43,21 +31,26 @@ function love.draw()
     love.graphics.push()
 
     -- work in units of 100
-    love.graphics.translate(0, h*.01)
-    love.graphics.scale(scale / WORLD_SIZE * .95)
-    love.graphics.setColor(.2,.2,.2,1)
-    love.graphics.rectangle('fill', 1, 1, WORLD_SIZE - 2, WORLD_SIZE - 2)
+    --love.graphics.translate(w/2, h/2)
+    love.graphics.scale(h/WORLD_SIZE)
 
-    for i, person in ipairs(gPeople) do
-        person:draw()
+    -- draw a grid to represent the world
+    for u=0, WORLD_SIZE, 2.5 do
+        for v=0, WORLD_SIZE, 2.5 do
+            if ((u+v) % 5) == 0 then
+                love.graphics.setColor(.6,.6,.6,1)
+            else
+                love.graphics.setColor(.8,.8,.8,1)
+            end
+            love.graphics.rectangle('fill', u, v, 2.5, 2.5,.2)
+            end
     end
+    --
 
+    player:draw()
     love.graphics.pop()
-
-    love.graphics.print(gPeople[1].debug, 1, 1)
     --]]
 
-    display:draw()
     drawFPS()
 end
 

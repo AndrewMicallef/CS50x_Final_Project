@@ -27,28 +27,36 @@ function Person:init(index)
     self.gesundheit = 'healthy'
     self.state = 'idle'
 
-    -- state machine for health status
-    self.health = {
+end
+
+-- state machine for health status
+function Person:Health_switch(state)
+    local sm =
+    {
         ['healthy'] = function(dt) return self:healthy(dt) end,
         ['infected'] = function(dt) return self:infected(dt) end,
         ['recovered'] = function(dt) return self:recovered(dt) end,
         ['dead'] = function(dt) return self:dead(dt) end,
     }
+    return sm[state]
+end
 
-    -- state machine for behaviours
-    self.behaviours = {
-
+-- state machine for behaviours
+function Person:Behaviours_switch(state)
+    local sm =
+    {
         ['idle'] = function(dt) return self:idle(dt) end,
         ['walking'] = function(dt) return self:walking(dt) end,
         -- ... ....
         -- etc
     }
+    return sm[state]
 end
 
 function Person:update(dt)
     -- for the time being let's get people walking about randomly
-    self.behaviours[self.state](dt)
-    self.health[self.gesundheit](dt)
+    self.Behaviours_switch(self.state)(dt)
+    self.Health_switch(self.gesundheit)(dt)
 
     if (self.pos.x + self.radius > WORLD_SIZE - 1) then
         self.pos.x = WORLD_SIZE - self.radius

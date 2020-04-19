@@ -1,9 +1,9 @@
-POPULATION = 500
+POPULATION = 0
 -- Transmission is calculated on a 1-100 diceroll.
 -- This translates to 3% probability of transmission
 TRANSMISSION_PROBABILITY = 6
 INFECTED = 0
-WORLD_SIZE = 250
+WORLD_SIZE = 20
 
 STATUS_COLOR = {
     ['healthy'] = {0, .65, 0, 1},    -- green
