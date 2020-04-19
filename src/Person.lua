@@ -76,7 +76,7 @@ function Person:draw()
 
     love.graphics.setColor(STATUS_COLOR[self.gesundheit])
     love.graphics.circle('fill', 0, 0, r)
-    
+
     love.graphics.pop()
     --end
     -- bounding box for debug
@@ -131,8 +131,7 @@ function Person:healthy(dt)
 end
 
 function Person:infected(dt)
-    --self:shout()
-    ----[[
+
     local prevday = self.day
     -- works out to be about 1 day per second or so
     infection_timer = infection_timer + dt/10
@@ -152,11 +151,10 @@ function Person:infected(dt)
             self.gesundheit = 'recovered'
         end
     end
-    -- ]]
 end
 
 function Person:recovered(dt)
-    --[[
+
     local prevday = self.day
     infection_timer = infection_timer + dt/10
     self.day = math.floor(infection_timer + dt/10)
@@ -168,7 +166,6 @@ function Person:recovered(dt)
     if self.day > 7 and math.random(100) < 2 then
         self.gesundheit = 'healthy'
     end
-    -- ]]
 end
 
 function Person:dead(dt)
