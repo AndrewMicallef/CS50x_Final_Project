@@ -11,3 +11,19 @@ STATUS_COLOR = {
     ['recovered'] = {0, .8, 1, 1}, --light blue
     ['dead'] = {0.7, 0.7, 0.7, 1}, -- 70% grey
 }
+
+
+
+gFONTS = {
+    ['titleFont'] = love.graphics.newFont('assets/fonts/Toleyhand.ttf', 16),
+    ['mediumFont'] = love.graphics.newFont('assets/fonts/ka1.ttf', 10)
+}
+
+-- https://coolors.co/d79abc-baabda-9fdfcd-dcffcc-ffffff
+cPALETTE = {
+    ['c0'] = hex("#d79abc"),
+    ['c1'] = hex("#baabda"),
+    ['c2'] = hex('#9fdfcd'),
+    ['c3'] = hex('#dcffcc'),
+    ['c4'] = hex('#ffffff')
+}

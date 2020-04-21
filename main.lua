@@ -8,19 +8,29 @@ require 'src/Dependencies'
 gPeople = {}
 
 
+
 function love.load()
 
     -- seed the RNG
     math.randomseed(os.time())
-    player = Player()
-    player:init(5, 5)
+
+    -- initialize state machine with all state-returning functions
+    gStateMachine = StateMachine {
+        ['title'] = function() return TitleScreenState() end,
+        ['play'] = function() return PlayState() end,
+    }
+
+    -- this now handles the initilialisation of elemnents
+    gStateMachine:change('title')
 
     love.keyboard.wasPressed = {}
     love.keyboard.wasReleased = {}
 end
 
 function love.update(dt)
-    player:update(dt)
+
+    -- single upate call which updates depending on the state we are in
+    gStateMachine:update(dt)
 
     love.keyboard.wasPressed = {}
     love.keyboard.wasReleased = {}
@@ -28,32 +38,8 @@ end
 
 function love.draw()
 
-    local w, h, flags = love.window.getMode()
-    local scale = math.min(w, h)
-    ----[[
-    love.graphics.push()
-
-    -- work in units of 100
-    --love.graphics.translate(w/2, h/2)
-    love.graphics.scale(h/WORLD_SIZE)
-
-    -- draw a grid to represent the world
-    for u=0, WORLD_SIZE, 2.5 do
-        for v=0, WORLD_SIZE, 2.5 do
-            if ((u+v) % 5) == 0 then
-                love.graphics.setColor(.6,.6,.6,1)
-            else
-                love.graphics.setColor(.8,.8,.8,1)
-            end
-            love.graphics.rectangle('fill', u, v, 2.5, 2.5,.2)
-            end
-    end
-    --
-
-    player:draw()
-    love.graphics.pop()
-    --]]
-
+    -- now, we just update the state machine, which defers to the right state
+    gStateMachine:render(dt)
     drawFPS()
 end
 
