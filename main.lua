@@ -49,7 +49,6 @@ function drawFPS()
     love.graphics.print(love.timer.getFPS() .. ' fps', w - 60, 10)
 end
 
-
 --------------------------------------------------------------------------------
 -- KEYBOARD
 

@@ -32,7 +32,6 @@ function Player:init(world, x,y,w,h)
 
     -- attaches a new collider to the player
     self.collider = world:newRectangleCollider(self.x, self.y, self.w, self.h)
-    self.collider:setCollisionClass('Player')
     self.collider:setLinearDamping(.1)
 
     -- make an internal reference to world
@@ -109,9 +108,9 @@ function Player:update(dt)
     end
 
     -- GRAPPLE HOOK LOGIC
-    if self.ghook and self.ghook:enter('sticky') then
+    if self.ghook and self.ghook:enter() then
         self.state = 'swinging'
-        local collision_data = self.ghook:getEnterCollisionData('sticky')
+        local collision_data = self.ghook:getEnterCollisionData()
         self.anchor = collision_data.collider:getObject()
         self.ax, self.ay = self.ghook:getPosition()
 
@@ -177,7 +176,7 @@ function Player:idle(dt)
         self:run(-1, 5)
     end
 
-    if love.keyboard.wasPressed("space") then
+    if love.keyboard.wasPressed["space"] then
         self:jump()
     end
 
@@ -258,7 +257,7 @@ function Player:falling(dt)
         self:run(-1, 5)
     end
 
-    if self.collider:enter('sticky') then
+    if self.collider:enter() then
         self.state = 'idle'
         -- if vnet > some threshold do damage to player or contact....
     end
@@ -281,7 +280,7 @@ function Player:fire(force)
 end
 
 function Player:jump()
-    if love.keyboard.wasPressed("space") and self.jumpcount < 2 then
+    if love.keyboard.wasPressed["space"] and self.jumpcount < 2 then
 
         self.state = "jumping"
         self.jumpcount = self.jumpcount + 1

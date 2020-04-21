@@ -19,9 +19,9 @@ end
 function TitleScreenState:render()
     love.graphics.setColor(cPALETTE['c0'])
     love.graphics.setFont(gFONTS['titleFont'])
-    love.graphics.printf('WELCOME', 0, 64, 200, 'center')
+    love.graphics.printf('WELCOME', 0, 250, 800, 'center')
 
     love.graphics.setColor(cPALETTE['c2'])
     love.graphics.setFont(gFONTS['mediumFont'])
-    love.graphics.printf('Press Enter', 0, 100, 200, 'center')
+    love.graphics.printf('Press Enter', 0, 350, 800, 'center')
 end

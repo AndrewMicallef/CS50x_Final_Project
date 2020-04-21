@@ -16,7 +16,6 @@ function Character:init(world, x, y, w, h)
 
     -- attaches a new collider to the Character
     self.collider = world:newRectangleCollider(self.x, self.y, self.w, self.h)
-    self.collider:setCollisionClass('sticky')
     self.collider:setObject(self.collider)
 
     -- make an internal reference to world

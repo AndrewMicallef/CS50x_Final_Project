@@ -21,7 +21,11 @@ require 'src/states/BaseState'
 require 'src/states/TitleScreenState'
 require 'src/states/PlayState'
 
-require 'src/Person'
-require 'src/Player'
+-- Base Classes
+require 'src/Class/Character'
+require 'src/Class/Player'
+
+-- Room States
+require 'Rooms/Hub'
 
 require 'src/util'

@@ -15,8 +15,8 @@ STATUS_COLOR = {
 
 
 gFONTS = {
-    ['titleFont'] = love.graphics.newFont('assets/fonts/Toleyhand.ttf', 16),
-    ['mediumFont'] = love.graphics.newFont('assets/fonts/ka1.ttf', 10)
+    ['titleFont'] = love.graphics.newFont('assets/fonts/Toleyhand.ttf', 50),
+    ['mediumFont'] = love.graphics.newFont('assets/fonts/ka1.ttf', 20)
 }
 
 -- https://coolors.co/d79abc-baabda-9fdfcd-dcffcc-ffffff
