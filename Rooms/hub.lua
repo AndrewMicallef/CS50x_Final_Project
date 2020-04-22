@@ -2,8 +2,8 @@ Hub = Class{__includes = BaseState}
 
 function Hub:init()
 
-        self.world = wf.newWorld(0, 0, true)
-        self.world:setGravity(0, 512)
+        self.world = wf.newWorld(0, 512, true)
+        --self.world:setGravity(0, 512)
         ww, wh, f = love.window.getMode()
         sx, sy = ww / 150,  wh/100
         w, h = 10, 10
@@ -50,15 +50,18 @@ function Hub:init()
 end
 
 function Hub:update(dt)
+    self.world:update(dt)
     player:update(dt)
     NPC:update(dt)
 end
 
 function Hub:render()
 
+    cam:lookAt(player.x, player.y)
+
     love.graphics.setColor(cPALETTE['c0'])
     love.graphics.setFont(gFONTS['titleFont'])
-    love.graphics.printf('THIS IS HUB', 0, 250, 800, 'center')
+    love.graphics.printf('THIS IS ROOM0', 0, 250, 800, 'center')
 
 
     self.world:draw()

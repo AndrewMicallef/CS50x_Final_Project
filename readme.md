@@ -8,10 +8,11 @@ Road map
 --------------------------------------------------------------------------------
 
 1. Player Update
-    - Player character,
-    - 2D motion,
+
+    * [x] Player character,
+    * [x] 2D motion,
     - basic momentum, does not accelerate infinitly
-    - can jump
+    * [x] can jump
 
 2. NPC Update
     - Add an NPC (bubble guy) that tries to avoid the player

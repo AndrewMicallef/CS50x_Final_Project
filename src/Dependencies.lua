@@ -3,6 +3,7 @@
 -- https://github.com/vrld/hump
 Class = require 'lib/hump/class'
 vector  = require 'lib/hump/vector'
+camera = require 'lib/hump.camera'
 
 -- https://github.com/adnzzzzZ/windfield
 -- wrapper around box2d physics, combines all three elements into

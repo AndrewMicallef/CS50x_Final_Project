@@ -33,6 +33,7 @@ function Player:init(world, x,y,w,h)
     -- attaches a new collider to the player
     self.collider = world:newRectangleCollider(self.x, self.y, self.w, self.h)
     self.collider:setLinearDamping(.1)
+    self.collider:setType('dynamic')
 
     -- make an internal reference to world
     self.world = world
@@ -59,14 +60,16 @@ end
 
 function Player:draw()
 
+    local cx, cy = cam:position()
     -- Draw torso
     love.graphics.push()
 
     love.graphics.translate(self.x, self.y)
     love.graphics.rotate(self.collider:getAngle())
 
-    local hx, hy = love.graphics.inverseTransformPoint(self.hx, self.hy)
-
+    local hx, hy = love.graphics.inverseTransformPoint(cx, cy)
+    --hx = cx
+    --hy = cy
     -- draw head and body
     love.graphics.setColor(.75, .75, 0, 1)
     love.graphics.rectangle('fill', 0-self.w/2, 0-self.h/2, self.w, self.h)
@@ -107,25 +110,6 @@ function Player:update(dt)
         x0, y0, self.ax, self.ay = self.rope:getAnchors()
     end
 
-    -- GRAPPLE HOOK LOGIC
-    if self.ghook and self.ghook:enter() then
-        self.state = 'swinging'
-        local collision_data = self.ghook:getEnterCollisionData()
-        self.anchor = collision_data.collider:getObject()
-        self.ax, self.ay = self.ghook:getPosition()
-
-        -- set the rope length to some fraction of the current distance (Pythagoras)
-        -- or 50 units, whichever is greater
-        self.ropelength = math.max(50, math.sqrt(math.pow(self.ax - self.x, 2) + math.pow(self.ay - self.y, 2)) * .5)
-
-        self.rope = world:addJoint('RopeJoint',
-                                self.collider, self.anchor,
-                                self.x, self.y,
-                                self.ax, self.ay,
-                                self.ropelength, true)
-        self.ghook:destroy()
-        self.ghook = nil
-    end
 
     -- FIRE A SHOT
     if love.mouse.isDown(1) then
@@ -210,6 +194,23 @@ end
 
 function Player:swinging(dt)
     -- NOTE: this state implies the grapple hook is attached to something.
+    if self.ghook then
+        self.ghook:destroy()
+        self.ghook = nil
+
+        -- set the rope length to some fraction of the current distance (Pythagoras)
+        -- or 50 units, whichever is greater
+        self.ropelength = math.max(50, math.sqrt(math.pow(self.ax - self.x, 2) + math.pow(self.ay - self.y, 2)) * .85)
+
+        self.rope = self.world:addJoint('RopeJoint',
+                                self.collider, self.anchor,
+                                self.x, self.y,
+                                self.ax, self.ay,
+                                self.ropelength, true)
+    end
+
+
+
 
     -- swing left or right
     -- TODO apply a decreasing force based on current momentum and heading
@@ -276,6 +277,20 @@ function Player:fire(force)
     self.ghook = self.world:newRectangleCollider(self.x + rx, self.y + ry, 2.5, 2.5)
     self.ghook:applyLinearImpulse(force*rx, force*ry)
     self.ghook:setBullet(true)
+
+    --[[
+    `collider_1`, `collider_2`, `contact`, `normal_impulse1`, `tangent_impulse1`, `normal_impulse2` and `tangent_impulse2` as arguments
+    --]]
+    self.ghook:setPreSolve(function(collider_1, collider_2, contact)
+        -- GRAPPLE HOOK LOGIC
+        self.state = 'swinging'
+
+        self.anchor = collider_2:getObject()
+        self.ax, self.ay, _, _ = contact:getPositions()
+
+        end
+    )
+
 
 end
 

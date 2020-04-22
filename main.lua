@@ -22,7 +22,7 @@ function love.load()
 
     -- this now handles the initilialisation of elemnents
     gStateMachine:change('title')
-
+    
     love.keyboard.wasPressed = {}
     love.keyboard.wasReleased = {}
 end
@@ -45,6 +45,7 @@ end
 
 function drawFPS()
     local w, h, flags = love.window.getMode()
+    love.graphics.setFont(gFONTS['smallDebug'])
     love.graphics.setColor(1,1,0,1)
     love.graphics.print(love.timer.getFPS() .. ' fps', w - 60, 10)
 end
