@@ -13,8 +13,6 @@ function PlayState:init()
 
     -- this now handles the initilialisation of elemnents
     wStateMachine:change('hub')
-
-    cam = camera(0, 0)
 end
 
 function PlayState:update(dt)
@@ -23,7 +21,5 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    cam:attach()
     wStateMachine:render()
-    cam:detach()
 end

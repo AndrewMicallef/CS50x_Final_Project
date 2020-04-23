@@ -57,8 +57,6 @@ end
 
 function Hub:render()
 
-    cam:lookAt(player.x, player.y)
-
     love.graphics.setColor(cPALETTE['c0'])
     love.graphics.setFont(gFONTS['titleFont'])
     love.graphics.printf('THIS IS ROOM0', 0, 250, 800, 'center')
@@ -68,6 +66,7 @@ function Hub:render()
 
     player:draw()
     NPC:draw()
+
 end
 
 --[[

@@ -60,14 +60,13 @@ end
 
 function Player:draw()
 
-    local cx, cy = cam:position()
     -- Draw torso
     love.graphics.push()
 
     love.graphics.translate(self.x, self.y)
     love.graphics.rotate(self.collider:getAngle())
 
-    local hx, hy = love.graphics.inverseTransformPoint(cx, cy)
+    local hx, hy = love.graphics.inverseTransformPoint(self.hx , self.hy)
     --hx = cx
     --hy = cy
     -- draw head and body
