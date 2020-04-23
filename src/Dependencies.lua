@@ -25,6 +25,7 @@ require 'src/states/PlayState'
 -- Base Classes
 require 'src/Class/Character'
 require 'src/Class/Player'
+require 'src/Class/Item'
 
 -- Room States
 require 'Rooms/Hub'

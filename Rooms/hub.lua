@@ -1,5 +1,7 @@
 Hub = Class{__includes = BaseState}
 
+local coins = {}
+
 function Hub:init()
 
         self.world = wf.newWorld(0, 512, true)
@@ -47,6 +49,11 @@ function Hub:init()
         -- Player:init(world, x, y, w, h)
         player = Player(self.world, 150, 50, 10, 30)
         NPC = Character(self.world, 900, 200, 30, 50)
+
+
+        for i = 0, 50 do
+            coins[i] = Item(math.random(150) * sx, math.random(100) * sy)
+        end
 end
 
 function Hub:update(dt)
@@ -59,13 +66,16 @@ function Hub:render()
 
     love.graphics.setColor(cPALETTE['c0'])
     love.graphics.setFont(gFONTS['titleFont'])
-    love.graphics.printf('THIS IS ROOM0', 0, 250, 800, 'center')
+    love.graphics.printf('HUB', 0, 250, 800, 'center')
 
 
     self.world:draw()
 
     player:draw()
     NPC:draw()
+    for i, coin in pairs(coins) do
+        coin:render()
+    end
 
 end
 
