@@ -17,6 +17,17 @@ function Character:init(world, x, y, w, h)
     -- attaches a new collider to the Character
     self.collider = world:newRectangleCollider(self.x, self.y, self.w, self.h)
     self.collider:setObject(self.collider)
+    self.collider:setPreSolve(function(collider_1, collider_2, contact)
+
+        local source_object = collider_2:getObject()
+        local cx, cy, _, _ = contact:getPositions()
+
+        collider_2:applyLinearImpulse(0, -20)
+
+        -- TODO : affect bouncee's state
+
+        end
+    )
 
     -- make an internal reference to world
     self.world = world
